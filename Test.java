@@ -1,135 +1,76 @@
 
 public class Test {
+    
+    public static void InitialiseTestData() {
+        //get singleton instances of managers
+        UserManager userManager = UserManager.GetInstance();
+        RoomManager roomManager = RoomManager.GetInstance();
+        BookingManager bookingManager = BookingManager.GetInstance();
+
+        // Create test students using StudentFactory
+        Student student1 = new StudentFactory().CreateUser("john_student", "pass123", "078901234567");
+        Student student2 = new StudentFactory().CreateUser("emma_student", "pass456", "078901234568");
+        Student student3 = new StudentFactory().CreateUser("mike_student", "pass789", "078901234569");
+        Student student4 = new StudentFactory().CreateUser("lisa_student", "pass321", "078901234570");
+        Student student5 = new StudentFactory().CreateUser("tom_student", "pass654", "078901234571");
+        
+        userManager.AddUser(student1);
+        userManager.AddUser(student2);
+        userManager.AddUser(student3);
+        userManager.AddUser(student4);
+        userManager.AddUser(student5);
+        // Create test homeowners using HomeownerFactory
+        Homeowner homeowner1 = new HomeownerFactory().CreateUser("sarah_owner", "owner123", "023454333423");
+        Homeowner homeowner2 = new HomeownerFactory().CreateUser("david_owner", "owner456", "089892356355");
+        Homeowner homeowner3 = new HomeownerFactory().CreateUser("anna_owner", "owner789", "098956748384");
+        
+        userManager.AddUser(homeowner1);
+        userManager.AddUser(homeowner2);
+        userManager.AddUser(homeowner3);
+        // Create test admin using AdminFactory
+        Admin admin1 = new AdminFactory().CreateUser("admin", "admin123", "012345678901");
+        
+        userManager.AddUser(admin1);
+        System.out.println("Test users created!");
+        
+        // Homeowner 1 rooms
+        homeowner1.CreateRoomListing("City Centre", 450.0, true, true, "Cozy single room near shops");
+        homeowner1.CreateRoomListing("University Area", 550.0, true, false, "Spacious double room, 5 min walk to campus");
+        homeowner1.CreateRoomListing("City Centre", 600.0, true, true, "Modern ensuite room with desk");
+
+        // Homeowner 2 rooms
+        homeowner2.CreateRoomListing("Downtown", 650.0, true, true, "Luxury studio apartment");
+        homeowner2.CreateRoomListing("Suburbs", 400.0, true, false, "Quiet single room in residential area");
+        homeowner2.CreateRoomListing("University Area", 500.0, false, true, "Premium room - currently occupied");
+        homeowner2.CreateRoomListing("City Centre", 700.0, true, true, "Penthouse room with city views");
+
+        //homeowner 3 rooms
+        homeowner3.CreateRoomListing("Downtown", 480.0, true, false, "Affordable single room");
+        homeowner3.CreateRoomListing("Suburbs", 520.0, true, true,  "Comfortable double room with parking");
+        homeowner3.CreateRoomListing("University Area", 580.0, true, true, "Ensuite room close to campus"); 
+        System.out.println("Test rooms created!");
+        
+        // Create test bookings
+        student1.MakeBooking(homeowner1.GetListedRooms().get(0));
+        student2.MakeBooking(homeowner1.GetListedRooms().get(1));
+        student3.MakeBooking(homeowner2.GetListedRooms().get(0));
+        student4.MakeBooking(homeowner2.GetListedRooms().get(3));
+        student5.MakeBooking(homeowner3.GetListedRooms().get(1));
+
+        System.out.println("Test data initialized successfully!");
+        System.out.println("Students: " + userManager.GetAllStudents().size());
+        System.out.println("Homeowners: " + userManager.GetAllHomeowners().size());
+        System.out.println("Admins: " + userManager.GetAllAdmins().size());
+        System.out.println("Rooms: " + roomManager.GetAllRooms().size());
+        System.out.println("Bookings: " + bookingManager.GetAllBookings().size());
+    }
+    
     public static void main(String[] args) {
-        System.out.println("=== STUDENT RENTALS APPLICATION TEST ===\n");
-        
-        // ==========================================
-        // TEST 1: Create Users with Factories
-        // ==========================================
-        System.out.println("--- TEST 1: Creating Users ---");
-        StudentFactory studentFactory = new StudentFactory();
-        HomeownerFactory homeownerFactory = new HomeownerFactory();
-        
-        Student student1 = studentFactory.CreateUser("alice_jones", "pass123");
-        Student student2 = studentFactory.CreateUser("bob_smith", "pass456");
-        Homeowner homeowner1 = homeownerFactory.CreateUser("jane_landlord", "secure789");
-        
-        System.out.println("Created Student 1: " + student1.getUsername() + " (ID: " + student1.getUserID() + ")");
-        System.out.println("Created Student 2: " + student2.getUsername() + " (ID: " + student2.getUserID() + ")");
-        System.out.println("Created Homeowner: " + homeowner1.getUsername() + " (ID: " + homeowner1.getUserID() + ")");
-        System.out.println();
-        
-        // ==========================================
-        // TEST 2: Homeowner Creates Rooms
-        // ==========================================
-        System.out.println("--- TEST 2: Homeowner Creates Rooms ---");
-        Room room1 = homeowner1.CreateRoomListing("Manchester City Centre", 500.0, true, true, "Cozy studio apartment near university");
-        Room room2 = homeowner1.CreateRoomListing("Salford Quays", 450.0, true, false, "Spacious room in shared house");
-        Room room3 = homeowner1.CreateRoomListing("Fallowfield", 400.0, true, true, "Student accommodation with all utilities");
-        
-        System.out.println("Homeowner property count: " + homeowner1.getPropertyCount());
-        System.out.println();
-        
-        // ==========================================
-        // TEST 3: Display All Rooms
-        // ==========================================
-        System.out.println("--- TEST 3: Display All Rooms ---");
-        homeowner1.DisplayAllRooms();
-        System.out.println();
-        
-        // ==========================================
-        // TEST 4: Students Create Bookings
-        // ==========================================
-        System.out.println("--- TEST 4: Students Create Bookings ---");
-        
-        Booking booking1 = new Booking(student1, room1);
-        BookingManager.GetInstance().AddBooking(booking1);
-        System.out.println("Student 1 (" + student1.getUsername() + ") created booking: " + booking1.getBookingID());
-        System.out.println("  Room: " + booking1.getRoom().getLocation());
-        System.out.println("  Status: " + booking1.getBookingStatus());
-        System.out.println();
-        
-        Booking booking2 = new Booking(student2, room2);
-        BookingManager.GetInstance().AddBooking(booking2);
-        System.out.println("Student 2 (" + student2.getUsername() + ") created booking: " + booking2.getBookingID());
-        System.out.println("  Room: " + booking2.getRoom().getLocation());
-        System.out.println("  Status: " + booking2.getBookingStatus());
-        System.out.println();
-        
-        // ==========================================
-        // TEST 5: Homeowner Views Pending Bookings
-        // ==========================================
-        System.out.println("--- TEST 5: Homeowner Views Pending Bookings ---");
-        var pendingBookings = BookingManager.GetInstance().GetBookingsForHomeowner(homeowner1);
-        System.out.println("Homeowner has " + pendingBookings.size() + " pending booking(s):");
-        for (Booking b : pendingBookings) {
-            System.out.println("  Booking ID: " + b.getBookingID());
-            System.out.println("  Room: " + b.getRoom().getLocation());
-            System.out.println("  Student ID: " + b.getUserID());
-            System.out.println();
+        UI mainUI = new UI();
+        mainUI.initialise();
+        if (UserManager.GetInstance().GetAllUsers().isEmpty()) {
+            InitialiseTestData();
         }
-        
-        // ==========================================
-        // TEST 6: Homeowner Confirms a Booking
-        // ==========================================
-        System.out.println("--- TEST 6: Homeowner Confirms Booking ---");
-        homeowner1.ConfirmBooking(booking1);
-        System.out.println("Booking 1 status after confirmation: " + booking1.getBookingStatus());
-        System.out.println("Room 1 availability after confirmation: " +  (room1.isAvailable() ? "Available" : "Not Available"));
-        System.out.println();
-        
-        // ==========================================
-        // TEST 7: Homeowner Cancels a Booking
-        // ==========================================
-        System.out.println("--- TEST 7: Homeowner Cancels Booking ---");
-        homeowner1.RejectBooking(booking2);
-        System.out.println("Booking 2 status after cancellation: " + booking2.getBookingStatus());
-        System.out.println("Room 2 availability after cancellation: " + (room2.isAvailable() ? "Available" : "Not Available"));
-        System.out.println();
-        
-        // ==========================================
-        // TEST 8: Update Room Details
-        // ==========================================
-        System.out.println("--- TEST 8: Update Room Details ---");
-        System.out.println("Room 3 rent before update: £" + room3.getRent());
-        homeowner1.UpdateRoomDetails(room3.getRoomID(), null, 425.0, null, null, null);
-        System.out.println("Room 3 rent after update: £" + room3.getRent());
-        System.out.println();
-        
-        // ==========================================
-        // TEST 9: Remove a Room
-        // ==========================================
-        System.out.println("--- TEST 9: Remove a Room ---");
-        System.out.println("Property count before removal: " + homeowner1.getPropertyCount());
-        homeowner1.RemoveRoom(room3.getRoomID());
-        System.out.println("Property count after removal: " + homeowner1.getPropertyCount());
-        System.out.println();
-        
-        // ==========================================
-        // TEST 10: Student Views Their Bookings
-        // ==========================================
-        System.out.println("--- TEST 10: Student Views Their Bookings ---");
-        var student1Bookings = BookingManager.GetInstance().GetBookingsForStudent(student1);
-        System.out.println("Student 1 (" + student1.getUsername() + ") has " + student1Bookings.size() + " booking(s):");
-        for (Booking b : student1Bookings) {
-            System.out.println("  Booking ID: " + b.getBookingID());
-            System.out.println("  Room: " + b.getRoom().getLocation());
-            System.out.println("  Status: " + b.getBookingStatus());
-            System.out.println();
-        }
-        
-        // ==========================================
-        // FINAL SUMMARY
-        // ==========================================
-        System.out.println("=== TEST SUMMARY ===");
-        System.out.println("✓ User creation with auto-generated IDs");
-        System.out.println("✓ Room creation with auto-generated IDs");
-        System.out.println("✓ Room management (create, update, remove)");
-        System.out.println("✓ Booking creation with auto-generated IDs");
-        System.out.println("✓ Booking status management (pending, confirmed, cancelled)");
-        System.out.println("✓ Room availability updates based on booking status");
-        System.out.println("✓ BookingManager singleton pattern");
-        System.out.println("✓ Homeowner and Student booking queries");
-        System.out.println("\nAll tests completed successfully!");
+        mainUI.start();
     }
 }

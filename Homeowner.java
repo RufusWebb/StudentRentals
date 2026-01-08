@@ -71,18 +71,23 @@ public class Homeowner extends User{
     public boolean ConfirmBooking(Booking booking){
         if (this.getUserID().equalsIgnoreCase(booking.room.getOwnerID())){
             // change booking status to confirmed
-            booking.BookingStatus = (Status.CONFIRMED);
+            booking.ConfirmBookingStatus(booking);   
             booking.room.setAvailability(false);
+            // update booking in booking manager
+            BookingManager.GetInstance().UpdateBooking(booking);
             return true;
         }
         else
             return false;
     }
+
     // reject booking
     public boolean RejectBooking(Booking booking){
         if (this.getUserID().equalsIgnoreCase(booking.room.getOwnerID())){
             // change booking status to rejected
-            booking.BookingStatus = (Status.REJECTED);
+            booking.RejectBookingStatus(booking);       
+            // update booking in booking manager
+            BookingManager.GetInstance().UpdateBooking(booking);
             return true;
         }
         else
@@ -96,13 +101,27 @@ public class Homeowner extends User{
         // print list of all bookings for specific homeowner
         for (Booking booking : myBookings) {
             System.out.println("Booking ID: " + booking.getBookingID() +
-                               ", Room ID: " + booking.getRoom().getRoomID() +
-                               ", Student ID: " + booking.getUserID() +
-                               ", Status: " + booking.getBookingStatus());
+                            ", Room ID: " + booking.getRoom().getRoomID() +
+                            ", Student ID: " + booking.getUserID() +
+                            ", Status: " + booking.getBookingStatus());
+        }
+    }
+
+    //display all pending bookings
+    public void DisplayAllPendingBookings(){
+        System.out.println("Pending Bookings for homeowner: " + this.getUserID());
+        List<Booking> myBookings = BookingManager.GetInstance().GetBookingsForHomeowner(this);
+        // print list of all bookings for specific homeowner
+        for (Booking booking : myBookings) {
+            if (booking.getBookingStatus() == Status.PENDING){
+                System.out.println("Booking ID: " + booking.getBookingID() +
+                                ", Room ID: " + booking.getRoom().getRoomID() +
+                                ", Student ID: " + booking.getUserID() +
+                                ", Status: " + booking.getBookingStatus());
+            }
         }
     }
     
-
     // show all rooms listed by homeowner
     public void DisplayAllRooms() {
         if (RoomListings.isEmpty()) {
@@ -110,7 +129,7 @@ public class Homeowner extends User{
             return;
         }
         
-        System.out.println("=== Listed Rooms for " + getUsername() + " ===");
+        System.out.println("Listed Rooms for " + getUsername() +":");
         for (Room room : RoomListings) {
             System.out.println("Room ID: " + room.getRoomID());
             System.out.println("Location: " + room.getLocation());
@@ -121,7 +140,6 @@ public class Homeowner extends User{
             System.out.println("---");
         }
     }
-
 
     // getters and setters
     public int getPropertyCount(){

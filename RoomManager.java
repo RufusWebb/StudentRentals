@@ -65,4 +65,14 @@ public class RoomManager{
         return FilteredRooms;
     }
 
+    // getting room by ID
+    public Room FindRoomByID(String roomID) {
+        for (Room room : AllRooms){
+            if (room.getRoomID().equalsIgnoreCase(roomID)) {
+                return room;
+            }
+        }
+        return null; 
+    }
+
 }

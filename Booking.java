@@ -4,7 +4,7 @@ public class Booking {
     private String bookingID;
     private String StudentID;
     public Room room;
-    Status BookingStatus;
+    private Status BookingStatus;
 
     // constructor
     public Booking(Student student, Room room) {
@@ -17,6 +17,16 @@ public class Booking {
     // generate bookingID
     public static String CreateBookingID(){
         return "B-" + java.util.UUID.randomUUID().toString().substring(0,8).toUpperCase();
+    }
+
+    // confirm booking status
+    public Status ConfirmBookingStatus(Booking booking){
+        return this.BookingStatus = Status.CONFIRMED;
+    }
+
+    // reject booking status 
+    public Status RejectBookingStatus(Booking booking){
+        return this.BookingStatus = Status.REJECTED;
     }
 
     // getters
@@ -32,10 +42,4 @@ public class Booking {
     public Status getBookingStatus() {
         return BookingStatus;
     }
-
-}
-enum Status {
-    PENDING,
-    CONFIRMED,
-    REJECTED
 }

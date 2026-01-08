@@ -1,4 +1,4 @@
 public interface UserFactory<T> {
-    T CreateUser(String Username, String Password);
+    T CreateUser(String Username, String Password, String ContactNumber);
     }
     

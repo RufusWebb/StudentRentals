@@ -11,7 +11,7 @@ public abstract class User {
 
     // constructor
     public User(String username, String password, String userType, String contactNumber) {
-        this.UserID = CreateUserID();
+        this.UserID = CreateUserID(userType);
         this.Username = username;
         this.Password = password;
         this.UserType = userType;
@@ -19,8 +19,13 @@ public abstract class User {
     }
 
     // getters
-    public static String CreateUserID() {
-        return "R-" + UUID.randomUUID().toString().substring(0,8).toUpperCase();
+    public static String CreateUserID(String userType){
+        if (userType.equals("Student")) {
+            return "S-" + UUID.randomUUID().toString().substring(0,8).toUpperCase();
+        } else if (userType.equals("Homeowner")) {
+            return "H-" + UUID.randomUUID().toString().substring(0,8).toUpperCase();
+        }
+        return "A-" + UUID.randomUUID().toString().substring(0,8).toUpperCase();
     }
     public String getUserID() {
         return UserID;

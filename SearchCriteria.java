@@ -1,12 +1,10 @@
 public class SearchCriteria {
-    private String location;
     private Double MinRent;
     private Double MaxRent;
     private Boolean isFurnished;
     private Boolean isAvailable;
 
-    public SearchCriteria(String location, Double MinRent, Double MaxRent, Boolean isFurnished, Boolean isAvailable){
-        this.location = location;
+    public SearchCriteria(Double MinRent, Double MaxRent, Boolean isFurnished, Boolean isAvailable){
         this.MinRent = MinRent;
         this.MaxRent = MaxRent;
         this.isFurnished = isFurnished;
@@ -14,10 +12,6 @@ public class SearchCriteria {
     }
 
     // getters
-    public String GetLocation(){
-        return location;
-    }
-
     public Double GetMinRent(){
         return MinRent;
     }
